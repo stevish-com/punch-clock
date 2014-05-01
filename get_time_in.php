@@ -19,9 +19,10 @@ This file is for returning how long the user has been clocked in for.
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-$sql_user = 'stevish_punch';
-$sql_db = 'stevish_punch';
-$sql_pass = '7DZ)^%8Q,FOb';
+include_once("db_config.php");
+if(!$sql_user || !$sql_pass || !$sql_db) {
+	die("Set up the variables in db_config.php (you may copy it from db_config_example.php)");
+}
 $mysqli = new mysqli('localhost', $sql_user, $sql_pass, $sql_db);
 if (mysqli_connect_error()) {
     die('Connect Error (' . mysqli_connect_errno() . ') ' . mysqli_connect_error());
