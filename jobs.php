@@ -1,4 +1,11 @@
 <?php
+/*
+DEPRACATED
+
+This file is no longer called. This is all done in index.php
+Keeping this because I'm afraid to delete it
+*/
+
 $sql_user = 'stevish_punch';
 $sql_db = 'stevish_punch';
 $sql_pass = '7DZ)^%8Q,FOb';
