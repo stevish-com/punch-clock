@@ -47,10 +47,11 @@ Under Development
 
 Wish List
 =========
-1. Password protection
+1. We need a SQL creation script to make the database!
+2. Password protection
   - At least basic single-password protection
   - Multiple user login would be nice too
     - This would require a users database, session control, a column in `transactions` for user id...
   - I am equipped to add either of these options as I have time and motivation.
-2. A pretty user interface (not my strong suit... will never be pretty if I don't have help)
-3. An API for a possible simple iOS/Android App (or any other type of app)
+3. A pretty user interface (not my strong suit... will never be pretty if I don't have help)
+4. An API for a possible simple iOS/Android App (or any other type of app)
