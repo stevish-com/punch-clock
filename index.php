@@ -29,7 +29,7 @@ if (mysqli_connect_error()) {
     die('Connect Error (' . mysqli_connect_errno() . ') ' . mysqli_connect_error());
 }
 
-
+$pass_hash = $mysqli->query("SELECT `value` FROM `data` WHERE `name` = 'pass';")->fetch_object()->value;
 $thisjob = intval($_POST['job']);
 $thisrate = $mysqli->query("SELECT `rate` FROM `jobs` WHERE `id` = '$thisjob';")->fetch_object()->rate;
 $from_date = preg_replace("/[^0-9\/]/", "", $_POST['from_date']);
@@ -56,12 +56,15 @@ if (intval($_GET['co_id'])) {
 switch($_POST['action']) {
 	case 'get_time_in':
 		if ($clockedin) {
-			die( h2hm(($now - $clockedintimestamp) / 3600) );
+			die( h2hm( ( $now - $clockedintimestamp ) / 3600) );
 		} else {
 			die("0");
 		}
 		break;
 	case 'in':
+		if ( s_hash( $_POST[ 'pass' ] ) != $pass_hash ) {
+			die("Bad password. Go back and try again");
+		}
 		if(!$clockedin) {
 			clock_in();
 		} else {
@@ -69,6 +72,9 @@ switch($_POST['action']) {
 		}
 		break;
 	case 'out':
+		if ( s_hash( $_POST[ 'pass' ] ) != $pass_hash ) {
+			die("Bad password. Go back and try again");
+		}
 		if($clockedin) {
 			clock_out($clockedin);
 		} else {
@@ -187,6 +193,8 @@ if($clockedin) {
 		</select> <input type="text" name="newjob" />  $<input type="text" name="newrate" size="3" /><br/>
 	<?php } ?>
 	<input type="hidden" name="action" value="<?php echo $clockedin ? 'out' : 'in'; ?>" />
+	<label for="username">User: </label><input type="text" name="username" /><br/>
+	<label for="pass">Pass: </label><input type="password" name="pass" /><br/>
 	<input type="submit" value="<?php echo $clockedin ? 'Clock Out' : 'Clock In'; ?>" />
 	<input type="submit" name="now" value="<?php echo $clockedin ? 'Clock Out NOW' : 'Clock In NOW'; ?>" />
 </form><br/>
@@ -289,5 +297,10 @@ function success($message) {
 function h2hm($hours) {
 	$minutes = round(($hours - floor($hours)) * 60);
 	return floor($hours) . ':' . str_pad($minutes, 2, "0", STR_PAD_LEFT);
+}
+
+function s_hash( $in ) {
+	global $sql_pass;
+	return sha1( sha1( md5( sha1( $in ) ) ) . $sql_pass );
 }
 ?>
