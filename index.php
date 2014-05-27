@@ -29,16 +29,17 @@ if (mysqli_connect_error()) {
     die('Connect Error (' . mysqli_connect_errno() . ') ' . mysqli_connect_error());
 }
 
+$status = array(0 => 'unpaid', 1 => 'invoiced', 2=> 'paid');
 $pass_hash = $mysqli->query("SELECT `value` FROM `data` WHERE `name` = 'pass';")->fetch_object()->value;
 $thisjob = intval($_POST['job']);
 $thisrate = $mysqli->query("SELECT `rate` FROM `jobs` WHERE `id` = '$thisjob';")->fetch_object()->rate;
 $from_date = preg_replace("/[^0-9\/]/", "", $_POST['from_date']);
 $to_date = preg_replace("/[^0-9\/]/", "", $_POST['to_date']);
 
-if($from_date) {
+if ( isset( $from_date ) ) {
 	$_SESSION['from_date'] = $from_date;
 }
-if($to_date) {
+if ( isset( $to_date ) ) {
 	$_SESSION['to_date'] = $to_date;
 }
 
@@ -82,7 +83,6 @@ switch($_POST['action']) {
 		}
 		break;
 	case 'update_report':
-		$status = array(0 => 'unpaid', 1 => 'invoiced', 2=> 'paid');
 
 		if($thisjob) {
 			$where = "WHERE `job` = '$thisjob' AND `in` > '0' AND `out` > '0'";
@@ -122,10 +122,22 @@ switch($_POST['action']) {
 				?>
 				<table border="1" cellspacing="2" cellpadding="5">
 					<tr><th colspan="4"><?php echo strtoupper($s); ?></th></tr>
-					<tr><th>In</th><th>Out</th><th>Hours</th><th>Earned</th></tr>
+					<tr><th>In</th><th>Out</th><th>Hours</th><th>Earned</th><th>Change to...</th></tr>
 					<?php
-						foreach($jobdata[$s] as $inout)
-							echo '<tr><td>' . date("m/d/Y H:i:s", $inout['in']) . '</td><td>' . date("m/d/Y H:i:s", $inout['out']) . '</td><td>' . $inout['hours'] . '</td><td>' . $inout['earned'] . '</td></tr>';
+						foreach( $jobdata[$s] as $inout ) {
+							echo '<tr><td>' . date("m/d/Y H:i:s", $inout['in']) . '</td><td>' . date("m/d/Y H:i:s", $inout['out']) . '</td><td>' . $inout['hours'] . '</td><td>' . $inout['earned'] . '</td>';
+							echo '<td><form method="POST"><input type="hidden" name="action" value="edit_status" /><input type="hidden" name="punch_id" value="' . $inout['punch_id'] . '" />';
+							if ( 'unpaid' != $s ) {
+								echo '<input type="submit" name="status" value="unpaid" />';
+							}
+							if ( 'invoiced' != $s ) {
+								echo '<input type="submit" name="status" value="invoiced" />';
+							}
+							if ( 'paid' != $s ) {
+								echo '<input type="submit" name="status" value="paid" />';
+							}
+							echo '</form></td></tr>';
+						}
 						echo '<tr><td></td><th>Totals</th><th>' . h2hm($$shours) . '</th><th>$' . number_format($$searned, 2) . '</th></tr>';
 					?>
 				</table>
@@ -143,6 +155,19 @@ switch($_POST['action']) {
 		}
 		ob_end_clean();
 		
+		break;
+	case "edit_status":
+		$punch_id = intval( $_POST[ 'punch_id' ] );
+		$paid = array_search( $_POST[ 'status' ], $status );
+		if ( $result = $mysqli->query("SELECT * FROM `inout` WHERE `punch_id` = '$punch_id';") && $paid !== false ) {
+			if ( $mysqli->query("UPDATE `inout` SET `paid` = '$paid' WHERE `punch_id` = '$punch_id';") ) {
+				echo "Enty Updated<br/><br/>";
+			} else {
+				echo "Enty Not Updated<br/><br/>";
+			}
+		} else {
+			echo "Nope<br/>";
+		}
 		break;
 }
 
@@ -303,4 +328,3 @@ function s_hash( $in ) {
 	global $sql_pass;
 	return sha1( sha1( md5( sha1( $in ) ) ) . $sql_pass );
 }
-?>
