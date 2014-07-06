@@ -19,8 +19,9 @@ Stevish Punch Clock in PHP
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 session_start();
-$now = time();
+
 include_once("db_config.php");
+$now = time();
 if(!$sql_user || !$sql_pass || !$sql_db) {
 	die("Set up the variables in db_config.php (you may copy it from db_config_example.php)");
 }
