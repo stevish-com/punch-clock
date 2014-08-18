@@ -321,8 +321,17 @@ function success($message) {
 }
 
 function h2hm($hours) {
-	$minutes = round(($hours - floor($hours)) * 60);
-	return floor($hours) . ':' . str_pad($minutes, 2, "0", STR_PAD_LEFT);
+	if ( 0 < $hours ) {
+		$minutes = round(($hours - floor($hours)) * 60);
+		$rounded_hours = floor($hours);
+	} elseif ( 0 > $hours ) {
+		$minutes = round(($hours - ceil($hours)) * 60);
+		$rounded_hours = ceil($hours);
+	} else {
+		$minutes = 0;
+		$rounded_hours = 0;
+	}
+	return $rounded_hours . ':' . str_pad(abs($minutes), 2, "0", STR_PAD_LEFT);
 }
 
 function s_hash( $in ) {
