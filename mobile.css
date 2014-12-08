@@ -1,0 +1,67 @@
+table.report_table {
+	font-size: 1.5em;
+}
+
+#reportform {
+	font-size: 1.5em;
+}
+
+#reportform input, #reportform select {
+	font-size: 1em;
+}
+
+#newjob_input, #pass_row_good, #username_row {
+	display: none;
+}
+
+#punchform {
+	width: 970px;
+	background-color: #eee;
+	font-size: 8em;
+}
+
+#punchform input {
+	font-size: 1em;
+	width: 1.5em;
+}
+
+#punchform input.digit4 {
+	width: 3em;
+}
+
+#punchform input.text {
+	font-size: .5em;
+	width: 55%;
+}
+#punchform input.newrate {
+	font-size: .5em;
+	width: 35%;
+}
+
+#punchform select {
+	font-size: .5em;
+}
+
+#punchform input.submit {
+	width: 50%;
+	margin: 0;
+	padding: 0;
+	display: block;
+	float:left;
+	font-size: .5em;
+}
+
+#punchform table, #punchform table input {
+	font-size: 1em;
+	width: 100%; 
+}
+
+.formline {
+	display: block;
+	width: 100%;
+}
+
+.formline br {
+	display: none;
+}
+
