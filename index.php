@@ -352,6 +352,4 @@ function s_hash( $in ) {
 	global $sql_pass;
 	return sha1( sha1( md5( sha1( $in ) ) ) . $sql_pass );
 }
-echo "<pre>";
-print_r($_SESSION);
-print_r($_POST);
+
