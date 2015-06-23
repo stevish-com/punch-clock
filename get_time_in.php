@@ -20,6 +20,7 @@ This file is for returning how long the user has been clocked in for.
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 include_once("db_config.php");
+require_once("functions.php");
 if(!$sql_user || !$sql_pass || !$sql_db) {
 	die("Set up the variables in db_config.php (you may copy it from db_config_example.php)");
 }
@@ -39,8 +40,5 @@ if ($clockedin) {
 	die("0");
 }
 
-function h2hm($hours) {
-	$minutes = round(($hours - floor($hours)) * 60);
-	return floor($hours) . ':' . str_pad($minutes, 2, "0", STR_PAD_LEFT);
-}
+
 ?>
